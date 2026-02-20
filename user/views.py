@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.conf import settings
-from .models import User, Product, Cart, Order, OrderItem, Review, send_welcome_email, send_order_sms
+from .models import User, Product, Cart, Order, OrderItem, Review, send_welcome_email, send_order_sms, send_order_confirmation_email
 import json
 from django.utils import timezone
 
@@ -307,6 +307,9 @@ def process_payment(request):
                 
                 # Send order confirmation SMS
                 send_order_sms(order.delivery_phone, order.order_id, 'confirmed')
+                
+                # Send order confirmation email
+                send_order_confirmation_email(order)
                 
                 # Redirect to order confirmation with success message
                 messages.success(request, 'Order placed successfully! You will pay when you receive your order.')

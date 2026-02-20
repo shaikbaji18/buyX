@@ -190,27 +190,33 @@ class Review(models.Model):
         return f"{self.user.email} - {self.product.model_name} - {self.rating} stars"
 
 
-# Utility function to send welcome email
+# Utility function to send welcome_email
 def send_welcome_email(user):
     from django.core.mail import send_mail
     from django.conf import settings
     
-    subject = 'Welcome to Xavier Mobiles!'
-    message = f'''Dear {user.username},
+    user_type_text = "Distributor" if user.user_type == 'distributor' else "Customer"
+    
+    # Get user's name (prefer first_name, fall back to username)
+    user_name = user.first_name if user.first_name else user.username
+    
+    subject = 'Welcome to buyX - Lets Start Our Journey Together!'
+    message = f'''Dear {user_name},
 
-Thank you for joining Xavier Mobiles!
+Thank you for choosing buyX!
 
-We're excited to have you as a member of our mobile shopping community. 
+We're excited to have you as a {user_type_text} of our mobile shopping community. 
+Let's start our journey together!
+
 You can now browse and purchase the latest mobile phones at great prices.
-
-As a {'distributor' if user.user_type == 'distributor' else 'customer'}, you {'can add products to our catalog' if user.user_type == 'distributor' else 'get access to exclusive deals and discounts'}.
+{'As a distributor, you can add products to our catalog and reach more customers.' if user.user_type == 'distributor' else 'Get access to exclusive deals and discounts on the latest smartphones.'}
 
 If you have any questions, feel free to reach out to our support team.
 
 Happy Shopping!
 
 Best regards,
-Xavier Mobiles Team
+buyX Team
 '''
     
     try:
@@ -224,6 +230,62 @@ Xavier Mobiles Team
         return True
     except Exception as e:
         print(f"Error sending welcome email: {e}")
+        return False
+
+
+# Utility function to send order confirmation email
+def send_order_confirmation_email(order):
+    from django.core.mail import send_mail
+    from django.conf import settings
+    
+    # Get order items details
+    items_list = []
+    for item in order.items.all():
+        items_list.append(f"- {item.product_name} x {item.quantity} (Rs.{item.product_price})")
+    items_details = "\n".join(items_list)
+    
+    subject = f'Order Confirmed - {order.order_id} | buyX'
+    message = f'''Dear {order.delivery_name},
+
+Your order has been successfully confirmed!
+
+Order Details:
+---------------
+Order ID: {order.order_id}
+Total Amount: Rs.{order.total_amount}
+Payment Method: Cash on Delivery
+Status: Confirmed
+
+Items Ordered:
+{items_details}
+
+Delivery Address:
+{order.delivery_address}
+
+Track your order with the given order ID: {order.order_id}
+
+You will receive your order within 3-5 business days. 
+Our delivery partner will contact you before delivery.
+
+Thank you for shopping with buyX!
+
+If you have any questions, feel free to reach out to our support team.
+
+Best regards,
+buyX Team
+'''
+    
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [order.delivery_email],
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Error sending order confirmation email: {e}")
         return False
 
 
