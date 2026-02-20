@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmation - buyX{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="text-center">
+        <div class="mb-4">
+            <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+        </div>
+        
+        <h2>Thank You for Your Order!</h2>
+        <p class="text-muted">Your order has been placed successfully.</p>
+        
+        <div class="card mt-4 d-inline-block text-start">
+            <div class="card-body">
+                <h5>Order Details</h5>
+                <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">{{ order.status }}</span></p>
+                <p><strong>Payment Status:</strong> <span class="badge bg-info">{{ order.payment_status }}</span></p>
+                
+                <hr>
+                
+                <h5>Delivery Address</h5>
+                <p>
+                    {{ order.delivery_name }}<br>
+                    {{ order.delivery_address }}<br>
+                    Phone: {{ order.delivery_phone }}
+                </p>
+                
+                <hr>
+                
+                <h5>Order Items</h5>
+                {% for item in order_items %}
+                <div class="d-flex justify-content-between mb-2">
+                    <span>{{ item.product_name }} x {{ item.quantity }}</span>
+                    <span>₹{{ item.get_total_price }}</span>
+                </div>
+                {% endfor %}
+                
+                <hr>
+                
+                <div class="d-flex justify-content-between">
+                    <strong>Total Amount</strong>
+                    <strong class="text-success">₹{{ order.total_amount }}</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <p class="text-muted">
+                <i class="fas fa-envelope"></i> A confirmation email has been sent to {{ order.delivery_email }}<br>
+                <i class="fas fa-sms"></i> You will receive SMS updates about your order status.
+            </p>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'shopping' %}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{% url 'orders' %}" class="btn btn-outline-primary">View My Orders</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

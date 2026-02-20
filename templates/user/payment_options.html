@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Options - buyX{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Select Payment Method</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Payment Options</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">Order ID: {{ order.order_id }} | Total: ₹{{ order.total_amount }}</p>
+                    
+                    <div class="payment-options">
+                        <!-- Cash on Delivery -->
+                        <div class="payment-option-card" onclick="selectPayment('cod')">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-money-bill-wave fa-2x text-success"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-1">Cash on Delivery</h5>
+                                    <p class="text-muted mb-0">Pay when you receive your order</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <!-- Credit/Debit Card -->
+                        <div class="payment-option-card" onclick="selectPayment('card')">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-credit-card fa-2x text-primary"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-1">Credit / Debit Card</h5>
+                                    <p class="text-muted mb-0">Visa, Mastercard, RuPay, and more</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <!-- UPI -->
+                        <div class="payment-option-card" onclick="selectPayment('upi')">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-mobile-alt fa-2x text-purple"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-1">UPI</h5>
+                                    <p class="text-muted mb-0">Google Pay, PhonePe, Paytm, and more</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <!-- Net Banking -->
+                        <div class="payment-option-card" onclick="selectPayment('netbanking')">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-university fa-2x text-info"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-1">Net Banking</h5>
+                                    <p class="text-muted mb-0">All major Indian banks supported</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <!-- EMI -->
+                        <div class="payment-option-card" onclick="selectPayment('emi')">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar-alt fa-2x text-warning"></i>
+                                <div class="ms-3">
+                                    <h5 class="mb-1">EMI</h5>
+                                    <p class="text-muted mb-0">Easy monthly installments</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in order_items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <strong>{{ item.product_name }}</strong>
+                            <br>
+                            <small class="text-muted">Qty: {{ item.quantity }}</small>
+                        </div>
+                        <span>₹{{ item.get_total_price }}</span>
+                    </div>
+                    {% endfor %}
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ order.total_amount }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span class="text-success">Free</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong class="text-success">₹{{ order.total_amount }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden form for Cash on Delivery submission -->
+<form id="cod-form" method="POST" action="{% url 'process_payment' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order.order_id }}">
+    <input type="hidden" name="payment_method" value="cod">
+</form>
+
+{% block extra_js %}
+<script>
+    function selectPayment(paymentMethod) {
+        if (paymentMethod === 'cod') {
+            // Cash on Delivery - submit the form
+            document.getElementById('cod-form').submit();
+        } else {
+            // Other payment methods - show popup message
+            alert('This feature will be updated soon. Please choose Cash on Delivery for now.');
+        }
+    }
+</script>
+{% endblock %}
+
+<style>
+    .payment-option-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .payment-option-card:hover {
+        border-color: #007bff;
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .text-purple {
+        color: #6f42c1;
+    }
+    
+    .payment-option-card i.fa-chevron-right {
+        color: #6c757d;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop Mobile Phones - buyX{% endblock %}
+
+{% block content %}
+<div class="container-main mt-navbar section-padding">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold mb-3 reveal">buyX everywhere</h1>
+        <p class="text-secondary reveal reveal-delay-1">Discover the latest smartphones at unbeatable prices</p>
+    </div>
+    
+    <!-- Search and Filter -->
+    <div class="row g-3 mb-4 reveal reveal-delay-2">
+        <div class="col-md-6">
+            <form method="GET" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control-glass" placeholder="Search mobiles..." value="{{ search|default:'' }}">
+                <button type="submit" class="btn-primary-gradient">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form method="GET">
+                <div class="d-flex gap-2">
+                    <select name="brand" class="form-control-glass" onchange="this.form.submit()">
+                        <option value="">All Brands</option>
+                        {% for brand_value, brand_name in brands %}
+                            <option value="{{ brand_value }}" {% if selected_brand == brand_value %}selected{% endif %}>
+                                {{ brand_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if search %}
+                        <input type="hidden" name="search" value="{{ search }}">
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Products Grid -->
+    <div class="row g-4">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card-glass h-100">
+                        <div class="card-img-wrapper">
+                            {% if product.image1 %}
+                                <img src="{{ product.image1.url }}" class="card-img-top" alt="{{ product.model_name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/200x200?text=No+Image" class="card-img-top" alt="No Image">
+                            {% endif %}
+                            
+                            {% if product.discount > 0 %}
+                                <span class="discount-badge">{{ product.discount }}% OFF</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.brand }} {{ product.model_name }}</h5>
+                            <p class="card-text">{{ product.features|truncatewords:8 }}</p>
+                            
+                            <div class="mt-auto">
+                                <div class="product-price mb-2">
+                                    {% if product.discount > 0 %}
+                                        <span class="original-price">₹{{ product.price }}</span>
+                                        <span>₹{{ product.get_discounted_price }}</span>
+                                    {% else %}
+                                        <span>₹{{ product.price }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if product.stock > 0 %}
+                                    <span class="stock-badge in-stock">
+                                        <i class="fas fa-check-circle"></i>In Stock
+                                    </span>
+                                {% else %}
+                                    <span class="stock-badge out-of-stock">
+                                        <i class="fas fa-times-circle"></i>Out of Stock
+                                    </span>
+                                {% endif %}
+                                
+                                <a href="{% url 'product_detail' product.id %}" class="btn-primary-gradient w-100 mt-3">
+                                    <i class="fas fa-eye"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search" style="font-size: 3rem; color: var(--text-muted);"></i>
+                <p class="mt-3 text-secondary">No products found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

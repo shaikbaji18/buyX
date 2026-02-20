@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}buyX{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Pro E-Commerce UI Framework -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head> 
+<body>
+    <!-- Premium Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-glass">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <span class="brand-text">buy<span class="brand-x">X</span></span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background: var(--bg-input); padding: 0.5rem;">
+                <i class="fas fa-bars" style="color: var(--text-primary);"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn-large" href="{% url 'shopping' %}">
+                                <i class="fas fa-store me-2"></i>Shopping
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn-large" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-cart me-2"></i>Cart
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-btn-large" href="{% url 'orders' %}">
+                                <i class="fas fa-box-open me-2"></i>Orders
+                            </a>
+                        </li>
+                        {% if user.user_type == 'distributor' %}
+                            <li class="nav-item">
+                                <a class="nav-link nav-btn-large" href="{% url 'distributor_dashboard' %}">
+                                    <i class="fas fa-chart-line me-2"></i>Dashboard
+                                </a>
+                            </li>
+                        {% endif %}
+                        <!-- User Profile Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="user-avatar">
+                                    {{ user.username|make_list|first|upper }}
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-glass" aria-labelledby="userDropdown">
+                                <li class="px-3 py-2 border-bottom">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar me-3" style="width: 48px; height: 48px; font-size: 1.1rem;">
+                                            {{ user.username|make_list|first|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">{{ user.username }}</div>
+                                            <div class="small" style="color: var(--text-secondary);">{{ user.get_user_type_display }}</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="px-3 py-2">
+                                    <div class="mb-2">
+                                        <i class="fas fa-envelope me-2" style="color: var(--text-muted); width: 16px;"></i>
+                                        <span class="small" style="color: var(--text-muted);">Email</span>
+                                        <div class="fw-medium" style="font-size: 0.9rem;">{{ user.email }}</div>
+                                    </div>
+                                </li>
+                                <li class="px-3 py-2">
+                                    <div class="mb-2">
+                                        <i class="fas fa-phone me-2" style="color: var(--text-muted); width: 16px;"></i>
+                                        <span class="small" style="color: var(--text-muted);">Phone</span>
+                                        <div class="fw-medium" style="font-size: 0.9rem;">+91 {{ user.phone }}</div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider" style="border-color: var(--glass-border);"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger d-flex align-items-center" href="{% url 'logout' %}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn-primary-gradient" href="{% url 'signup' %}">
+                                <i class="fas fa-user-plus"></i>Sign Up
+                            </a>
+                        </li>
+                    {% endif %}
+                    <!-- Theme Toggle Button -->
+                    <li class="nav-item">
+                        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+        <div class="container-main mt-navbar pt-4">
+            {% for message in messages %}
+                <div class="alert-glass alert-{{ message.tags }} d-flex align-items-center justify-content-between">
+                    <div>
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" style="filter: invert(1);"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <!-- Premium Footer -->
+    <footer class="footer-glass">
+        <div class="container-main">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 text-center text-md-start">
+                    <span class="brand-text" style="font-size: 1.75rem;">buy<span class="brand-x">X</span></span>
+                    <p class="mt-3" style="color: var(--text-secondary); max-width: 300px;">
+                        Your trusted destination for the latest mobile phones and accessories at competitive prices.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Quick Links</h6>
+                    <a href="{% url 'shopping' %}" class="footer-link">Shop</a>
+                    <a href="{% url 'cart' %}" class="footer-link">Cart</a>
+                    <a href="{% url 'orders' %}" class="footer-link">Orders</a>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Support</h6>
+                    <a href="#" class="footer-link">Help Center</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">FAQs</a>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Legal</h6>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="#" class="footer-link">Refund Policy</a>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="footer-title">Follow Us</h6>
+                    <div class="d-flex gap-3 justify-content-center justify-content-md-start">
+                        <a href="#" style="color: var(--text-secondary); font-size: 1.25rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: var(--text-secondary); font-size: 1.25rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: var(--text-secondary); font-size: 1.25rem;"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright text-center">
+                <p>&copy; 2020 buyX. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Pro UI Script -->
+    <script src="/static/js/script.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

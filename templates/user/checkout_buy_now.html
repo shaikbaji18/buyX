@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - buyX{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Checkout</h2>
+    
+    <div class="row">
+        <!-- Delivery Details Form -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Delivery Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="checkout-form">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="delivery_name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="delivery_name" name="delivery_name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="delivery_phone" class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" id="delivery_phone" name="delivery_phone" maxlength="10" pattern="[0-9]{10}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="delivery_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="delivery_email" name="delivery_email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="delivery_address" class="form-label">Full Address</label>
+                            <textarea class="form-control" id="delivery_address" name="delivery_address" rows="3" required></textarea>
+                        </div>
+                        
+                        <!-- Live Location -->
+                        <div class="mb-3">
+                            <label class="form-label">Live Location (Optional)</label>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-info" onclick="getLocation()">
+                                    <i class="fas fa-map-marker-alt"></i> Get Current Location
+                                </button>
+                                <input type="hidden" id="latitude" name="latitude">
+                                <input type="hidden" id="longitude" name="longitude">
+                            </div>
+                            <div id="location-status" class="mt-2 text-muted"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <strong>{{ product.brand }} {{ product.model_name }}</strong>
+                            <br>
+                            <small class="text-muted">Qty: {{ quantity }}</small>
+                        </div>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span class="text-success">Free</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong class="text-success">₹{{ total }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    function getLocation() {
+        const statusDiv = document.getElementById('location-status');
+        
+        if (navigator.geolocation) {
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting location...';
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                    statusDiv.innerHTML = '<i class="fas fa-check-circle text-success"></i> Location captured!';
+                },
+                function(error) {
+                    let errorMessage;
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Location access denied. Please enable location services.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Location request timed out.';
+                            break;
+                        default:
+                            errorMessage = 'An unknown error occurred.';
+                    }
+                    statusDiv.innerHTML = '<i class="fas fa-times-circle text-danger"></i> ' + errorMessage;
+                }
+            );
+        } else {
+            statusDiv.innerHTML = '<i class="fas fa-times-circle text-danger"></i> Geolocation is not supported by this browser.';
+        }
+    }
+</script>
+{% endblock %}
+{% endblock %}

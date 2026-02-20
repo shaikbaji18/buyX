@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment - buyX{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Payment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h4>Order Total: ₹{{ order.total_amount }}</h4>
+                        <p class="text-muted">Order ID: {{ order.order_id }}</p>
+                    </div>
+                    
+                    <form id="payment-form">
+                        {% csrf_token %}
+                        <input type="hidden" id="razorpay_order_id" value="{{ razorpay_order.id }}">
+                        <input type="hidden" id="razorpay_payment_id">
+                        <input type="hidden" id="razorpay_signature">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-control" placeholder="Enter card number" disabled>
+                            <div class="form-text">Razorpay will handle payment securely</div>
+                        </div>
+                        
+                        <button type="button" id="pay-button" class="btn btn-success w-100">
+                            <i class="fas fa-lock"></i> Pay ₹{{ order.total_amount }}
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p class="text-muted small">
+                            <i class="fas fa-shield-alt"></i> Payment secured by Razorpay
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    const options = {
+        "key": "{{ key_id }}",
+        "amount": "{{ razorpay_order.amount }}",
+        "currency": "INR",
+        "name": "Xavier Mobiles",
+        "description": "Order Payment",
+        "order_id": "{{ razorpay_order.id }}",
+        "handler": function (response) {
+            // Store payment details
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            
+            // Send to backend for verification
+            fetch('{% url "payment_callback" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/order-confirmation/' + data.order_id + '/';
+                } else {
+                    alert('Payment verification failed: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Payment processing failed. Please try again.');
+            });
+        },
+        "theme": {
+            "color": "#007bff"
+        }
+    };
+    
+    const rzp1 = new Razorpay(options);
+    
+    document.getElementById('pay-button').addEventListener('click', function() {
+        rzp1.open();
+    });
+    
+    // If payment fails
+    rzp1.on('payment.failed', function (response) {
+        alert('Payment failed: ' + response.error.description);
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Distributor Sign Up - buyX{% endblock %}
+
+{% block content %}
+<div class="container-main mt-navbar pt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Distributor Sign Up</h2>
+                <p class="text-muted">Create a distributor account to start selling</p>
+            </div>
+            <div class="card">
+                <div class="card-body p-4">
+                    <form method="POST" action="{% url 'distributor_signup' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Indian Mobile Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" maxlength="10" pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number" required>
+                            <div class="form-text">Enter your 10-digit Indian mobile number</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100">Sign Up as Distributor</button>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p>Already have a distributor account? <a href="{% url 'distributor_login' %}">Login</a></p>
+                        <p><a href="{% url 'signup' %}">User Sign Up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
