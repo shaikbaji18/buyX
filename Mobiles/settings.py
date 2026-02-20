@@ -130,13 +130,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@gmail.com'  # Change this
-EMAIL_HOST_PASSWORD = 'your-app-password'  # Change this
-DEFAULT_FROM_EMAIL = 'Xavier Mobiles <your-email@gmail.com>'
+EMAIL_HOST_USER = 'buyX999@gmail.com'  # Change this
+EMAIL_HOST_PASSWORD = 'sjsr huho cigz xhda'  # Change this
+DEFAULT_FROM_EMAIL = 'buyX Mobiles <buyX999@gmail.com>'
 
-# Razorpay Configuration
-RAZORPAY_KEY_ID = 'your_razorpay_key_id'  # Change this
-RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'  # Change this
+
 
 # Twilio SMS Configuration
 TWILIO_ACCOUNT_SID = 'your_twilio_account_sid'  # Change this

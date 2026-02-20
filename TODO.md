@@ -1,17 +1,25 @@
-# TODO - Update User Pages with Premium Styling
+# TODO: Email Confirmation Implementation
 
-## Task
-Update cart, orders, product_detail, and checkout pages to use premium glass-morphism styling like shopping page.
+## Task Summary
+Implement confirmation emails for:
+1. User/Distributor signup - "Thanks for choosing buyX. Let's start our journey together"
+2. Order confirmation - "Your order has been successfully confirmed. Track your order with the given order id."
 
-## Files to Update
-- [ ] Mobiles/templates/user/cart.html
-- [ ] Mobiles/templates/user/orders.html
-- [ ] Mobiles/templates/user/product_detail.html
-- [ ] Mobiles/templates/user/checkout.html
+## Plan:
 
-## Changes Required
-1. Replace `class="container mt-4"` with `class="container-main mt-navbar section-padding"`
-2. Replace `class="card"` with `class="card-glass"`
-3. Replace `class="btn btn-primary"` with `class="btn-primary-gradient"`
-4. Replace `class="form-control"` with `class="form-control-glass"`
-5. Add header section similar to shopping.html
+### 1. Update `user/models.py`
+- [ ] Update `send_welcome_email()` function with new message:
+  - Subject: "Welcome to buyX - Let's Start Our Journey Together!"
+  - Message: "Thanks for choosing buyX. Let's start our journey together"
+- [ ] Create new `send_order_confirmation_email()` function:
+  - Subject: "Order Confirmed - Your buyX Order"
+  - Message: "Your order has been successfully confirmed. Track your order with the given order id."
+
+### 2. Update `user/views.py`
+- [ ] Import `send_order_confirmation_email` in views
+- [ ] Call `send_order_confirmation_email()` in `process_payment()` function after order is confirmed
+
+### 3. Testing
+- [ ] Test user signup email
+- [ ] Test distributor signup email
+- [ ] Test order confirmation email
