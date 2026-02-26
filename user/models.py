@@ -200,20 +200,10 @@ def send_welcome_email(user):
     # Get user's name (prefer first_name, fall back to username)
     user_name = user.first_name if user.first_name else user.username
     
-    subject = 'Welcome to buyX - Lets Start Our Journey Together!'
+    subject = 'Welcome to buyX - Let\'s Start Our Journey Together!'
     message = f'''Dear {user_name},
 
-Thank you for choosing buyX!
-
-We're excited to have you as a {user_type_text} of our mobile shopping community. 
-Let's start our journey together!
-
-You can now browse and purchase the latest mobile phones at great prices.
-{'As a distributor, you can add products to our catalog and reach more customers.' if user.user_type == 'distributor' else 'Get access to exclusive deals and discounts on the latest smartphones.'}
-
-If you have any questions, feel free to reach out to our support team.
-
-Happy Shopping!
+Thanks for choosing buyX. Let's start our journey together
 
 Best regards,
 buyX Team
@@ -244,32 +234,17 @@ def send_order_confirmation_email(order):
         items_list.append(f"- {item.product_name} x {item.quantity} (Rs.{item.product_price})")
     items_details = "\n".join(items_list)
     
-    subject = f'Order Confirmed - {order.order_id} | buyX'
+    subject = 'Order Confirmed - Your buyX Order'
     message = f'''Dear {order.delivery_name},
 
-Your order has been successfully confirmed!
+Your order has been successfully confirmed. Track your order with the given order id: {order.order_id}
 
 Order Details:
 ---------------
 Order ID: {order.order_id}
 Total Amount: Rs.{order.total_amount}
-Payment Method: Cash on Delivery
-Status: Confirmed
-
-Items Ordered:
-{items_details}
-
-Delivery Address:
-{order.delivery_address}
-
-Track your order with the given order ID: {order.order_id}
-
-You will receive your order within 3-5 business days. 
-Our delivery partner will contact you before delivery.
 
 Thank you for shopping with buyX!
-
-If you have any questions, feel free to reach out to our support team.
 
 Best regards,
 buyX Team
@@ -299,7 +274,7 @@ def send_order_sms(phone, order_id, status):
         
         client = twilio.rest.Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         
-        message = f"Xavier Mobiles: Your order {order_id} has been {status}. Thank you for shopping with us!"
+        message = f"{settings.SITE_NAME}: Your order {order_id} has been {status}. Thank you for shopping with us!"
         
         message = client.messages.create(
             body=message,

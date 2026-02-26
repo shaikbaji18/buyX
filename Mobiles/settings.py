@@ -16,6 +16,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -25,7 +27,9 @@ SECRET_KEY = 'django-insecure-s@zx%az+9^oa%leghvdv-jsv=)17ipu!_q95r-wl!mg#k9tk$%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+SITE_NAME = 'buyX'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '8000']
 
 
 # Application definition
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,14 +117,23 @@ USE_I18N = True
 
 USE_TZ = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
@@ -130,16 +144,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'buyX999@gmail.com'  # Change this
-EMAIL_HOST_PASSWORD = 'sjsr huho cigz xhda'  # Change this
+EMAIL_HOST_USER = 'buyX999@gmail.com'
+EMAIL_HOST_PASSWORD = 'sjsr huho cigz xhda'
 DEFAULT_FROM_EMAIL = 'buyX Mobiles <buyX999@gmail.com>'
 
 
 
 # Twilio SMS Configuration
-TWILIO_ACCOUNT_SID = 'your_twilio_account_sid'  # Change this
-TWILIO_AUTH_TOKEN = 'your_twilio_auth_token'  # Change this
-TWILIO_PHONE_NUMBER = '+1234567890'  # Change this
+TWILIO_ACCOUNT_SID = 'your_twilio_account_sid'
+TWILIO_AUTH_TOKEN = 'your_twilio_auth_token'
+TWILIO_PHONE_NUMBER = '+1234567890'
 
 # Authentication
 AUTH_USER_MODEL = 'user.User'

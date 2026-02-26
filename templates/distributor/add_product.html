@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Product - Xavier Mobiles{% endblock %}
+{% block title %}Add Product - buyX{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Add New Product</h2>
-    
+
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <div class="row">
             <!-- Basic Info -->
             <div class="col-md-6">
@@ -21,31 +21,33 @@
                             <label for="brand" class="form-label">Brand</label>
                             <select class="form-select" id="brand" name="brand" required>
                                 {% for brand_value, brand_name in brands %}
-                                    <option value="{{ brand_value }}">{{ brand_name }}</option>
+                                <option value="{{ brand_value }}">{{ brand_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="model_name" class="form-label">Model Name</label>
                             <input type="text" class="form-control" id="model_name" name="model_name" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="price" class="form-label">Price (₹)</label>
                             <input type="number" step="0.01" class="form-control" id="price" name="price" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="original_price" class="form-label">Original Price (₹) (Optional)</label>
-                            <input type="number" step="0.01" class="form-control" id="original_price" name="original_price">
+                            <input type="number" step="0.01" class="form-control" id="original_price"
+                                name="original_price">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="discount" class="form-label">Discount (%)</label>
-                            <input type="number" class="form-control" id="discount" name="discount" value="0" min="0" max="100">
+                            <input type="number" class="form-control" id="discount" name="discount" value="0" min="0"
+                                max="100">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stock Quantity</label>
                             <input type="number" class="form-control" id="stock" name="stock" value="0" min="0">
@@ -53,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Images -->
             <div class="col-md-6">
                 <div class="card mb-4">
@@ -65,17 +67,17 @@
                             <label for="image1" class="form-label">Image 1 (Required)</label>
                             <input type="file" class="form-control" id="image1" name="image1" accept="image/*" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image2" class="form-label">Image 2 (Optional)</label>
                             <input type="file" class="form-control" id="image2" name="image2" accept="image/*">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image3" class="form-label">Image 3 (Optional)</label>
                             <input type="file" class="form-control" id="image3" name="image3" accept="image/*">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image4" class="form-label">Image 4 (Optional)</label>
                             <input type="file" class="form-control" id="image4" name="image4" accept="image/*">
@@ -84,7 +86,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Features -->
         <div class="card mb-4">
             <div class="card-header">
@@ -93,11 +95,12 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="features" class="form-label">Key Features</label>
-                    <textarea class="form-control" id="features" name="features" rows="5" placeholder="Enter key features of the mobile..." required></textarea>
+                    <textarea class="form-control" id="features" name="features" rows="5"
+                        placeholder="Enter key features of the mobile..." required></textarea>
                 </div>
             </div>
         </div>
-        
+
         <!-- Specifications -->
         <div class="card mb-4">
             <div class="card-header">
@@ -108,55 +111,62 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="display" class="form-label">Display</label>
-                            <input type="text" class="form-control" id="display" name="display" placeholder="e.g., 6.7 inches AMOLED">
+                            <input type="text" class="form-control" id="display" name="display"
+                                placeholder="e.g: 6.7 inches AMOLED">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="processor" class="form-label">Processor</label>
-                            <input type="text" class="form-control" id="processor" name="processor" placeholder="e.g., Snapdragon 888">
+                            <input type="text" class="form-control" id="processor" name="processor"
+                                placeholder="e.g: Snapdragon 888">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="ram" class="form-label">RAM</label>
-                            <input type="text" class="form-control" id="ram" name="ram" placeholder="e.g., 8GB">
+                            <input type="text" class="form-control" id="ram" name="ram" placeholder="e.g: 8GB">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="storage" class="form-label">Storage</label>
-                            <input type="text" class="form-control" id="storage" name="storage" placeholder="e.g., 128GB">
+                            <input type="text" class="form-control" id="storage" name="storage"
+                                placeholder="e.g: 128GB">
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="battery" class="form-label">Battery</label>
-                            <input type="text" class="form-control" id="battery" name="battery" placeholder="e.g., 4500mAh">
+                            <input type="text" class="form-control" id="battery" name="battery"
+                                placeholder="e.g: 4500mAh">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="camera_rear" class="form-label">Rear Camera</label>
-                            <input type="text" class="form-control" id="camera_rear" name="camera_rear" placeholder="e.g., 64MP + 12MP">
+                            <input type="text" class="form-control" id="camera_rear" name="camera_rear"
+                                placeholder="e.g: 64MP + 12MP">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="camera_front" class="form-label">Front Camera</label>
-                            <input type="text" class="form-control" id="camera_front" name="camera_front" placeholder="e.g., 32MP">
+                            <input type="text" class="form-control" id="camera_front" name="camera_front"
+                                placeholder="e.g: 32MP">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="os" class="form-label">Operating System</label>
-                            <input type="text" class="form-control" id="os" name="os" placeholder="e.g., Android 13">
+                            <input type="text" class="form-control" id="os" name="os" placeholder="e.g: Android 13">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="network" class="form-label">Network</label>
-                            <input type="text" class="form-control" id="network" name="network" placeholder="e.g., 5G, 4G, 3G">
+                            <input type="text" class="form-control" id="network" name="network"
+                                placeholder="e.g: 5G, 4G, 3G">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="mb-4">
             <button type="submit" class="btn btn-success btn-lg">Add Product</button>
             <a href="{% url 'distributor_dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>

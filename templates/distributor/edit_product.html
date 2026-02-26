@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Edit Product - Xavier Mobiles{% endblock %}
+{% block title %}Edit Product - buyX{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4">Edit Product</h2>
-    
+
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <div class="row">
             <!-- Basic Info -->
             <div class="col-md-6">
@@ -21,41 +21,47 @@
                             <label for="brand" class="form-label">Brand</label>
                             <select class="form-select" id="brand" name="brand" required>
                                 {% for brand_value, brand_name in brands %}
-                                    <option value="{{ brand_value }}" {% if product.brand == brand_value %}selected{% endif %}>
-                                        {{ brand_name }}
-                                    </option>
+                                <option value="{{ brand_value }}" {% if product.brand==brand_value %}selected{% endif
+                                    %}>
+                                    {{ brand_name }}
+                                </option>
                                 {% endfor %}
                             </select>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="model_name" class="form-label">Model Name</label>
-                            <input type="text" class="form-control" id="model_name" name="model_name" value="{{ product.model_name }}" required>
+                            <input type="text" class="form-control" id="model_name" name="model_name"
+                                value="{{ product.model_name }}" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="price" class="form-label">Price (₹)</label>
-                            <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ product.price }}" required>
+                            <input type="number" step="0.01" class="form-control" id="price" name="price"
+                                value="{{ product.price }}" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="original_price" class="form-label">Original Price (₹) (Optional)</label>
-                            <input type="number" step="0.01" class="form-control" id="original_price" name="original_price" value="{{ product.original_price|default:'' }}">
+                            <input type="number" step="0.01" class="form-control" id="original_price"
+                                name="original_price" value="{{ product.original_price|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="discount" class="form-label">Discount (%)</label>
-                            <input type="number" class="form-control" id="discount" name="discount" value="{{ product.discount }}" min="0" max="100">
+                            <input type="number" class="form-control" id="discount" name="discount"
+                                value="{{ product.discount }}" min="0" max="100">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stock Quantity</label>
-                            <input type="number" class="form-control" id="stock" name="stock" value="{{ product.stock }}" min="0">
+                            <input type="number" class="form-control" id="stock" name="stock"
+                                value="{{ product.stock }}" min="0">
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Images -->
             <div class="col-md-6">
                 <div class="card mb-4">
@@ -66,31 +72,31 @@
                         <div class="mb-3">
                             <label for="image1" class="form-label">Image 1</label>
                             {% if product.image1 %}
-                                <img src="{{ product.image1.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
+                            <img src="{{ product.image1.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
                             {% endif %}
                             <input type="file" class="form-control" id="image1" name="image1" accept="image/*">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image2" class="form-label">Image 2</label>
                             {% if product.image2 %}
-                                <img src="{{ product.image2.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
+                            <img src="{{ product.image2.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
                             {% endif %}
                             <input type="file" class="form-control" id="image2" name="image2" accept="image/*">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image3" class="form-label">Image 3</label>
                             {% if product.image3 %}
-                                <img src="{{ product.image3.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
+                            <img src="{{ product.image3.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
                             {% endif %}
                             <input type="file" class="form-control" id="image3" name="image3" accept="image/*">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="image4" class="form-label">Image 4</label>
                             {% if product.image4 %}
-                                <img src="{{ product.image4.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
+                            <img src="{{ product.image4.url }}" class="img-thumbnail mb-2" style="max-height: 100px;">
                             {% endif %}
                             <input type="file" class="form-control" id="image4" name="image4" accept="image/*">
                         </div>
@@ -98,7 +104,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Features -->
         <div class="card mb-4">
             <div class="card-header">
@@ -107,11 +113,12 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="features" class="form-label">Key Features</label>
-                    <textarea class="form-control" id="features" name="features" rows="5" required>{{ product.features }}</textarea>
+                    <textarea class="form-control" id="features" name="features" rows="5"
+                        required>{{ product.features }}</textarea>
                 </div>
             </div>
         </div>
-        
+
         <!-- Specifications -->
         <div class="card mb-4">
             <div class="card-header">
@@ -122,55 +129,64 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="display" class="form-label">Display</label>
-                            <input type="text" class="form-control" id="display" name="display" value="{{ product.specifications.display|default:'' }}">
+                            <input type="text" class="form-control" id="display" name="display"
+                                value="{{ product.specifications.display|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="processor" class="form-label">Processor</label>
-                            <input type="text" class="form-control" id="processor" name="processor" value="{{ product.specifications.processor|default:'' }}">
+                            <input type="text" class="form-control" id="processor" name="processor"
+                                value="{{ product.specifications.processor|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="ram" class="form-label">RAM</label>
-                            <input type="text" class="form-control" id="ram" name="ram" value="{{ product.specifications.ram|default:'' }}">
+                            <input type="text" class="form-control" id="ram" name="ram"
+                                value="{{ product.specifications.ram|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="storage" class="form-label">Storage</label>
-                            <input type="text" class="form-control" id="storage" name="storage" value="{{ product.specifications.storage|default:'' }}">
+                            <input type="text" class="form-control" id="storage" name="storage"
+                                value="{{ product.specifications.storage|default:'' }}">
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="battery" class="form-label">Battery</label>
-                            <input type="text" class="form-control" id="battery" name="battery" value="{{ product.specifications.battery|default:'' }}">
+                            <input type="text" class="form-control" id="battery" name="battery"
+                                value="{{ product.specifications.battery|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="camera_rear" class="form-label">Rear Camera</label>
-                            <input type="text" class="form-control" id="camera_rear" name="camera_rear" value="{{ product.specifications.camera_rear|default:'' }}">
+                            <input type="text" class="form-control" id="camera_rear" name="camera_rear"
+                                value="{{ product.specifications.camera_rear|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="camera_front" class="form-label">Front Camera</label>
-                            <input type="text" class="form-control" id="camera_front" name="camera_front" value="{{ product.specifications.camera_front|default:'' }}">
+                            <input type="text" class="form-control" id="camera_front" name="camera_front"
+                                value="{{ product.specifications.camera_front|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="os" class="form-label">Operating System</label>
-                            <input type="text" class="form-control" id="os" name="os" value="{{ product.specifications.os|default:'' }}">
+                            <input type="text" class="form-control" id="os" name="os"
+                                value="{{ product.specifications.os|default:'' }}">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="network" class="form-label">Network</label>
-                            <input type="text" class="form-control" id="network" name="network" value="{{ product.specifications.network|default:'' }}">
+                            <input type="text" class="form-control" id="network" name="network"
+                                value="{{ product.specifications.network|default:'' }}">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="mb-4">
             <button type="submit" class="btn btn-success btn-lg">Update Product</button>
             <a href="{% url 'distributor_dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>
